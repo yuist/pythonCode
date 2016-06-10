@@ -1,0 +1,23 @@
+#cookbook23ye
+#我们在写查询元素的代码时， 通常会使用包含 yield 表达式的生成器函数，也就是
+#示例代码中的那样。这样可以将搜索过程代码和使用搜索结果代码解耦.
+#使用 deque(maxlen=N) 构造函数会新建一个固定大小的队列。当新的元素加入并
+#且这个队列已满的时候，最老的元素会自动被移除掉.
+from collections import deque
+
+
+def search(lines, pattern, history=5):
+	previous_lines = deque(maxlen=history)
+	for li in lines:
+		if pattern in li:
+			yield li, previous_lines
+		previous_lines.append(li)
+	
+
+if __name__ == '__main__':
+	with open(r'../../cookbook/somefile.txt') as f:
+		for line, prevlines in search(f, 'python', 5):
+			for pline in prevlines:
+				print(pline, end='')
+			print(line, end='')
+			print('-'*20)
